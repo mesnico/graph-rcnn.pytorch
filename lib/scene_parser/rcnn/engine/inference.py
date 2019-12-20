@@ -6,8 +6,8 @@ import os
 import torch
 from tqdm import tqdm
 
-from lib.config import cfg
-from lib.data.datasets.evaluation import evaluate
+from graphrcnn.lib.config import cfg
+from graphrcnn.lib.data.datasets.evaluation import evaluate
 from ..utils.comm import is_main_process, get_world_size
 from ..utils.comm import all_gather
 from ..utils.comm import synchronize

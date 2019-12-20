@@ -5,8 +5,8 @@ from __future__ import division
 import os
 from collections import defaultdict
 import numpy as np
-from lib.scene_parser.mask_rcnn.structures.bounding_box import BoxList
-from lib.scene_parser.mask_rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.mask_rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.scene_parser.mask_rcnn.structures.boxlist_ops import boxlist_iou
 
 
 def do_gqa_voc_evaluation(dataset, predictions, output_folder, logger):

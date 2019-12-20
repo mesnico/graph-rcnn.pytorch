@@ -5,9 +5,9 @@ import torch
 from collections import OrderedDict
 from tqdm import tqdm
 
-# from lib.scene_parser.rcnn.modeling.roi_heads.mask_head.inference import Masker
-from lib.scene_parser.rcnn.structures.bounding_box import BoxList
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+# from graphrcnn.lib.scene_parser.rcnn.modeling.roi_heads.mask_head.inference import Masker
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
 
 
 def do_coco_evaluation(

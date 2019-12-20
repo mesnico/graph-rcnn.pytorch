@@ -11,13 +11,13 @@ from collections import OrderedDict
 
 import torch
 import torch.nn as nn
-from lib.scene_parser.rcnn.layers import (
+from graphrcnn.lib.scene_parser.rcnn.layers import (
     BatchNorm2d,
     Conv2d,
     FrozenBatchNorm2d,
     interpolate,
 )
-from lib.scene_parser.rcnn.layers.misc import _NewEmptyTensorOp
+from graphrcnn.lib.scene_parser.rcnn.layers.misc import _NewEmptyTensorOp
 
 
 logger = logging.getLogger(__name__)

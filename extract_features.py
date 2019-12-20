@@ -11,25 +11,25 @@ import numpy as np
 import torch
 import datetime
 
-from lib.config import cfg
-from lib.model import build_model
-from lib.scene_parser.rcnn.utils.miscellaneous import mkdir, save_config, get_timestamp
-from lib.scene_parser.rcnn.utils.comm import synchronize, get_rank
-from lib.scene_parser.rcnn.utils.logger import setup_logger
+from graphrcnn.lib.config import cfg
+from graphrcnn.lib.model import build_model
+from graphrcnn.lib.scene_parser.rcnn.utils.miscellaneous import mkdir, save_config, get_timestamp
+from graphrcnn.lib.scene_parser.rcnn.utils.comm import synchronize, get_rank
+from graphrcnn.lib.scene_parser.rcnn.utils.logger import setup_logger
 
 
-def inference(cfg, args, model=None):
+def inference(cfg, args, split="val", model=None):
     """
     test scene graph generation model
     """
     if model is None:
         arguments = {}
         arguments["iteration"] = 0
-        model = build_model(cfg, arguments, args.local_rank, args.distributed)
-    model.inference(visualize=args.visualize)
+        model = build_model(cfg, arguments, 0, args.distributed)
+    model.inference(visualize=False, split=split)
 
 
-def extract_visual_features(dataset='coco', algorithm='sg_imp'):
+def extract_visual_features(dataset='coco', algorithm='sg_imp', split='val'):
     ''' parse config file '''
     parser = argparse.ArgumentParser(description="Graph Reasoning Machine for Visual Question Answering")
     # parser.add_argument("--config-file", default="configs/baseline_res101.yaml")
@@ -46,7 +46,7 @@ def extract_visual_features(dataset='coco', algorithm='sg_imp'):
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
 
-    config_file = os.path.join('checkpoints', 'sgg_res101_joint_coco_inference.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), 'configs', 'sgg_res101_joint_coco_inference.yaml')
     cfg.merge_from_file(config_file)
 
     cfg.inference = True
@@ -56,9 +56,9 @@ def extract_visual_features(dataset='coco', algorithm='sg_imp'):
     cfg.DATASET.NAME = dataset
     cfg.MODEL.ALGORITHM = algorithm
     if algorithm == 'sg_imp':
-        cfg.MODEL.WEIGHT_DET = '/media/nicola/Data/Workspace/TransformItInYourMind/graph-rcnn.pytorch/checkpoints/sg_imp_step_ckpt.pth'
+        cfg.MODEL.WEIGHT_DET = '{}/checkpoints/sg_imp_step_ckpt.pth'.format(os.path.dirname(__file__))
     elif algorithm == 'sg_baseline':
-        cfg.MODEL.WEIGHT_DET = '/media/nicola/Data/Workspace/TransformItInYourMind/graph-rcnn.pytorch/checkpoints/sg_baseline_ckpt.pth'
+        cfg.MODEL.WEIGHT_DET = '{}/checkpoints/sg_baseline_ckpt.pth'.format(os.path.dirname(__file__))
     else:
         raise ValueError("The network comes not pretrained with {} algorithm!".format(algorithm))
     # cfg.MODEL.USE_FREQ_PRIOR = args.use_freq_prior
@@ -68,7 +68,7 @@ def extract_visual_features(dataset='coco', algorithm='sg_imp'):
     if not os.path.exists("logs") and get_rank() == 0:
         os.mkdir("logs")
     logger = setup_logger("scene_graph_generation", "logs", get_rank(),
-        filename="{}_{}.txt".format(args.algorithm, get_timestamp()))
+        filename="{}_{}.txt".format(algorithm, get_timestamp()))
 
     logger.info("Loaded configuration file {}".format(config_file))
     # output_config_path = os.path.join("logs", 'config.yml')
@@ -76,4 +76,4 @@ def extract_visual_features(dataset='coco', algorithm='sg_imp'):
     # save_config(cfg, output_config_path)
 
     # start inference for dumping features
-    inference(cfg, args)
+    inference(cfg, args, split=split)

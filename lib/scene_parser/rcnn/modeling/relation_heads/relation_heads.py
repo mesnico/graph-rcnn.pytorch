@@ -4,8 +4,8 @@
 import numpy as np
 import torch
 from torch import nn
-from lib.scene_parser.rcnn.structures.bounding_box_pair import BoxPairList
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box_pair import BoxPairList
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
 
 from .inference import make_roi_relation_post_processor
 from .loss import make_roi_relation_loss_evaluator

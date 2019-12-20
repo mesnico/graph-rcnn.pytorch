@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from lib.scene_parser.rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box import BoxList
 
 
 class BufferList(nn.Module):

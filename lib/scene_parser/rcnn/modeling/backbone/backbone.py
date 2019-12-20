@@ -4,7 +4,7 @@ from collections import OrderedDict
 from torch import nn
 
 from .. import registry
-from lib.scene_parser.rcnn.modeling.make_layers import conv_with_kaiming_uniform
+from graphrcnn.lib.scene_parser.rcnn.modeling.make_layers import conv_with_kaiming_uniform
 from . import fpn as fpn_module
 from . import resnet
 

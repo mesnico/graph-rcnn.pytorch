@@ -12,10 +12,10 @@ from .utils import concat_box_prediction_layers
 from ..balanced_positive_negative_sampler import BalancedPositiveNegativeSampler
 from ..utils import cat
 
-from lib.scene_parser.rcnn.layers import smooth_l1_loss
-from lib.scene_parser.rcnn.modeling.matcher import Matcher
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
-from lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
+from graphrcnn.lib.scene_parser.rcnn.layers import smooth_l1_loss
+from graphrcnn.lib.scene_parser.rcnn.modeling.matcher import Matcher
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
 
 
 class RPNLossComputation(object):

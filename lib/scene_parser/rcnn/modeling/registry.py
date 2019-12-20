@@ -1,6 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 
-from lib.scene_parser.rcnn.utils.registry import Registry
+from graphrcnn.lib.scene_parser.rcnn.utils.registry import Registry
 
 BACKBONES = Registry()
 RPN_HEADS = Registry()

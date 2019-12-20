@@ -3,7 +3,7 @@ from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 from torch.nn.modules.utils import _pair
 
-from lib.scene_parser.rcnn import _C
+from graphrcnn.lib.scene_parser.rcnn import _C
 
 
 class DeformConvFunction(Function):

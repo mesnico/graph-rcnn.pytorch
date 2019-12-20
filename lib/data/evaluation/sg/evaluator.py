@@ -4,8 +4,8 @@ Adapted from Danfei Xu. In particular, slow code was removed
 import torch
 import numpy as np
 from functools import reduce
-from lib.utils.pytorch_misc import intersect_2d, argsort_desc
-from lib.utils.box import bbox_overlaps
+from graphrcnn.lib.utils.pytorch_misc import intersect_2d, argsort_desc
+from graphrcnn.lib.utils.box import bbox_overlaps
 
 MODES = ('sgdet', 'sgcls', 'predcls')
 

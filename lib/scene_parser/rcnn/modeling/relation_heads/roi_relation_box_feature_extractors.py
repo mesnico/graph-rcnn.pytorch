@@ -3,11 +3,11 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from lib.scene_parser.rcnn.modeling import registry
-from lib.scene_parser.rcnn.modeling.backbone import resnet
-from lib.scene_parser.rcnn.modeling.poolers import Pooler
-from lib.scene_parser.rcnn.modeling.make_layers import group_norm
-from lib.scene_parser.rcnn.modeling.make_layers import make_fc
+from graphrcnn.lib.scene_parser.rcnn.modeling import registry
+from graphrcnn.lib.scene_parser.rcnn.modeling.backbone import resnet
+from graphrcnn.lib.scene_parser.rcnn.modeling.poolers import Pooler
+from graphrcnn.lib.scene_parser.rcnn.modeling.make_layers import group_norm
+from graphrcnn.lib.scene_parser.rcnn.modeling.make_layers import make_fc
 
 
 @registry.ROI_RELATION_BOX_FEATURE_EXTRACTORS.register("ResNet50Conv5ROIFeatureExtractor")

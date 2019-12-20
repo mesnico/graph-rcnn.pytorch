@@ -2,7 +2,7 @@ import torch
 from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 
-from lib.scene_parser.rcnn import _C
+from graphrcnn.lib.scene_parser.rcnn import _C
 
 class DeformRoIPoolingFunction(Function):
 

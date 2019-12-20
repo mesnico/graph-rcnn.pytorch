@@ -3,11 +3,11 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from lib.scene_parser.rcnn.structures.bounding_box import BoxList
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_nms
-from lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
-from lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
-from lib.scene_parser.rcnn.structures.bounding_box_pair import BoxPairList
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_nms
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
+from graphrcnn.lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box_pair import BoxPairList
 
 
 class PostProcessor(nn.Module):

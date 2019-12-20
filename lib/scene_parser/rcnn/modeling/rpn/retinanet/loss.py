@@ -8,13 +8,13 @@ from torch.nn import functional as F
 
 from ..utils import concat_box_prediction_layers
 
-from lib.scene_parser.rcnn.layers import smooth_l1_loss
-from lib.scene_parser.rcnn.layers import SigmoidFocalLoss
-from lib.scene_parser.rcnn.modeling.matcher import Matcher
-from lib.scene_parser.rcnn.modeling.utils import cat
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
-from lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
-from lib.scene_parser.rcnn.modeling.rpn.loss import RPNLossComputation
+from graphrcnn.lib.scene_parser.rcnn.layers import smooth_l1_loss
+from graphrcnn.lib.scene_parser.rcnn.layers import SigmoidFocalLoss
+from graphrcnn.lib.scene_parser.rcnn.modeling.matcher import Matcher
+from graphrcnn.lib.scene_parser.rcnn.modeling.utils import cat
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import cat_boxlist
+from graphrcnn.lib.scene_parser.rcnn.modeling.rpn.loss import RPNLossComputation
 
 class RetinaNetLossComputation(RPNLossComputation):
     """

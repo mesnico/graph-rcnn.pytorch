@@ -10,9 +10,9 @@ from . import (
     fbnet_modeldef as modeldef,
 )
 import torch.nn as nn
-from lib.scene_parser.rcnn.modeling import registry
-from lib.scene_parser.rcnn.modeling.rpn import rpn
-from lib.scene_parser.rcnn.modeling import poolers
+from graphrcnn.lib.scene_parser.rcnn.modeling import registry
+from graphrcnn.lib.scene_parser.rcnn.modeling.rpn import rpn
+from graphrcnn.lib.scene_parser.rcnn.modeling import poolers
 
 
 logger = logging.getLogger(__name__)

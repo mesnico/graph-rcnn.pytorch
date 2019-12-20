@@ -1,6 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 # from ._utils import _C
-from lib.scene_parser.rcnn import _C
+from graphrcnn.lib.scene_parser.rcnn import _C
 
 # from apex import amp
 

@@ -6,8 +6,8 @@ import time
 import torch
 import torch.distributed as dist
 
-from lib.scene_parser.rcnn.utils.comm import get_world_size
-from lib.scene_parser.rcnn.utils.metric_logger import MetricLogger
+from graphrcnn.lib.scene_parser.rcnn.utils.comm import get_world_size
+from graphrcnn.lib.scene_parser.rcnn.utils.metric_logger import MetricLogger
 
 from apex import amp
 

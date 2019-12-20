@@ -2,14 +2,14 @@
 import torch
 from torch.nn import functional as F
 
-from lib.scene_parser.rcnn.layers import smooth_l1_loss
-from lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
-from lib.scene_parser.rcnn.modeling.matcher import Matcher
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
-from lib.scene_parser.rcnn.modeling.balanced_positive_negative_sampler import (
+from graphrcnn.lib.scene_parser.rcnn.layers import smooth_l1_loss
+from graphrcnn.lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
+from graphrcnn.lib.scene_parser.rcnn.modeling.matcher import Matcher
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.rcnn.modeling.balanced_positive_negative_sampler import (
     BalancedPositiveNegativeSampler
 )
-from lib.scene_parser.rcnn.modeling.utils import cat
+from graphrcnn.lib.scene_parser.rcnn.modeling.utils import cat
 
 
 class FastRCNNLossComputation(object):

@@ -1,5 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
-from lib.scene_parser.rcnn.modeling import registry
+from graphrcnn.lib.scene_parser.rcnn.modeling import registry
 from torch import nn
 
 

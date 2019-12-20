@@ -7,7 +7,7 @@ from .coco import COCOVal
 from . import samplers
 from .transforms import build_transforms
 from .collate_batch import BatchCollator
-from lib.scene_parser.rcnn.utils.comm import get_world_size, get_rank
+from graphrcnn.lib.scene_parser.rcnn.utils.comm import get_world_size, get_rank
 
 def make_data_sampler(dataset, shuffle, distributed):
     if distributed:

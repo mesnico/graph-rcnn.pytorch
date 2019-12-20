@@ -6,15 +6,15 @@ import numpy as np
 import torch
 import cv2
 import shelve
-from .data.build import build_data_loader
-from .scene_parser.parser import build_scene_parser
-from .scene_parser.parser import build_scene_parser_optimizer
-from .scene_parser.rcnn.utils.metric_logger import MetricLogger
-from .scene_parser.rcnn.utils.timer import Timer, get_time_str
-from .scene_parser.rcnn.utils.comm import synchronize, all_gather, is_main_process, get_world_size
-from .scene_parser.rcnn.utils.visualize import select_top_predictions, overlay_boxes, overlay_class_names
-from .data.evaluation import evaluate, evaluate_sg
-from .utils.box import bbox_overlaps
+from graphrcnn.lib.data.build import build_data_loader
+from graphrcnn.lib.scene_parser.parser import build_scene_parser
+from graphrcnn.lib.scene_parser.parser import build_scene_parser_optimizer
+from graphrcnn.lib.scene_parser.rcnn.utils.metric_logger import MetricLogger
+from graphrcnn.lib.scene_parser.rcnn.utils.timer import Timer, get_time_str
+from graphrcnn.lib.scene_parser.rcnn.utils.comm import synchronize, all_gather, is_main_process, get_world_size
+from graphrcnn.lib.scene_parser.rcnn.utils.visualize import select_top_predictions, overlay_boxes, overlay_class_names
+from graphrcnn.lib.data.evaluation import evaluate, evaluate_sg
+from graphrcnn.lib.utils.box import bbox_overlaps
 
 class SceneGraphGeneration:
     """
@@ -335,7 +335,8 @@ class SceneGraphGeneration:
             if not os.path.exists(output_feat_fld):
                 os.makedirs(output_feat_fld)
             feat_dst_filename = os.path.join(output_feat_fld,
-                                             '{}_{}.db'.format(self.cfg.DATASET.NAME, split))
+                                             '{}_{}_{}.db'.format(self.cfg.DATASET.NAME, split,
+                                                                  self.cfg.MODEL.ALGORITHM))
             db = shelve.open(feat_dst_filename)
             #h5f_features = h5f.create_dataset('features', (data_len,), dtype=dtype1)
 

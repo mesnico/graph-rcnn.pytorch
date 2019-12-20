@@ -3,9 +3,9 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from lib.scene_parser.rcnn.modeling import registry
-from lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
-from lib.scene_parser.rcnn.modeling.rpn.retinanet.retinanet import build_retinanet
+from graphrcnn.lib.scene_parser.rcnn.modeling import registry
+from graphrcnn.lib.scene_parser.rcnn.modeling.box_coder import BoxCoder
+from graphrcnn.lib.scene_parser.rcnn.modeling.rpn.retinanet.retinanet import build_retinanet
 from .loss import make_rpn_loss_evaluator
 from .anchor_generator import make_anchor_generator
 from .inference import make_rpn_postprocessor

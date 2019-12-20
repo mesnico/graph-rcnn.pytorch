@@ -5,8 +5,8 @@ from __future__ import division
 import os
 from collections import defaultdict
 import numpy as np
-from lib.scene_parser.rcnn.structures.bounding_box import BoxList
-from lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.scene_parser.rcnn.structures.boxlist_ops import boxlist_iou
 
 
 def do_voc_evaluation(dataset, predictions, output_folder, logger):

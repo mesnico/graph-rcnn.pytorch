@@ -11,11 +11,11 @@ import numpy as np
 import torch
 import datetime
 
-from lib.config import cfg
-from lib.model import build_model
-from lib.scene_parser.rcnn.utils.miscellaneous import mkdir, save_config, get_timestamp
-from lib.scene_parser.rcnn.utils.comm import synchronize, get_rank
-from lib.scene_parser.rcnn.utils.logger import setup_logger
+from graphrcnn.lib.config import cfg
+from graphrcnn.lib.model import build_model
+from graphrcnn.lib.scene_parser.rcnn.utils.miscellaneous import mkdir, save_config, get_timestamp
+from graphrcnn.lib.scene_parser.rcnn.utils.comm import synchronize, get_rank
+from graphrcnn.lib.scene_parser.rcnn.utils.logger import setup_logger
 
 def parse_args():
     """

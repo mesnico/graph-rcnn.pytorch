@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from lib.scene_parser.rcnn.utils.boxes import bbox_transform_inv, boxes_union
+from graphrcnn.lib.scene_parser.rcnn.utils.boxes import bbox_transform_inv, boxes_union
 
 class SpatialFeature(nn.Module):
     def __init__(self, cfg, dim):

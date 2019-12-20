@@ -22,11 +22,11 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from lib.scene_parser.rcnn.layers import FrozenBatchNorm2d
-from lib.scene_parser.rcnn.layers import Conv2d
-from lib.scene_parser.rcnn.layers import DFConv2d
-from lib.scene_parser.rcnn.modeling.make_layers import group_norm
-from lib.scene_parser.rcnn.utils.registry import Registry
+from graphrcnn.lib.scene_parser.rcnn.layers import FrozenBatchNorm2d
+from graphrcnn.lib.scene_parser.rcnn.layers import Conv2d
+from graphrcnn.lib.scene_parser.rcnn.layers import DFConv2d
+from graphrcnn.lib.scene_parser.rcnn.modeling.make_layers import group_norm
+from graphrcnn.lib.scene_parser.rcnn.utils.registry import Registry
 
 
 # ResNet stage specification

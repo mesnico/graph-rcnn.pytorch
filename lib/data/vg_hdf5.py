@@ -9,8 +9,8 @@ import h5py, json
 import torch
 from pycocotools.coco import COCO
 from torch.utils.data import Dataset
-from lib.scene_parser.rcnn.structures.bounding_box import BoxList
-from lib.utils.box import bbox_overlaps
+from graphrcnn.lib.scene_parser.rcnn.structures.bounding_box import BoxList
+from graphrcnn.lib.utils.box import bbox_overlaps
 
 class vg_hdf5(Dataset):
     def __init__(self, cfg, split="train", transforms=None, num_im=-1, num_val_im=5000,
