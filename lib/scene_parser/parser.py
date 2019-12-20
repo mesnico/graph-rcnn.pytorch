@@ -134,7 +134,7 @@ class SceneParser(GeneralizedRCNN):
                 scene_parser_losses.update(rel_heads_loss)
 
                 x = (x, x_pairs)
-                result = (detections, detection_pairs)
+                result = (detections, detection_pairs, x_pairs)
         else:
             # RPN-only models don't have roi_heads
             x = features
@@ -185,5 +185,5 @@ def build_scene_parser_optimizer(cfg, model, local_rank=0, distributed=False):
     checkpointer = SceneParserCheckpointer(cfg, model, optimizer, scheduler, save_dir, save_to_disk,
         logger=logging.getLogger("scene_graph_generation.checkpointer"))
     model_weight = cfg.MODEL.WEIGHT_DET if cfg.MODEL.WEIGHT_DET != "" else cfg.MODEL.WEIGHT_IMG
-    extra_checkpoint_data = checkpointer.load(model_weight, resume=cfg.resume)
+    extra_checkpoint_data = checkpointer.load(model_weight)
     return optimizer, scheduler, checkpointer, extra_checkpoint_data

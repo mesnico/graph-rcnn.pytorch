@@ -5,6 +5,7 @@ import time
 import numpy as np
 import torch
 import cv2
+import shelve
 from .data.build import build_data_loader
 from .scene_parser.parser import build_scene_parser
 from .scene_parser.parser import build_scene_parser_optimizer
@@ -27,18 +28,21 @@ class SceneGraphGeneration:
         self.arguments = arguments.copy()
         self.device = torch.device("cuda")
 
+        logger = logging.getLogger("scene_graph_generation.trainer")
+        # TODO: handle better the split naming
+        inference_split = 'val' if cfg.DATASET.NAME == 'coco' else 'test'
+
         # build data loader
         self.data_loader_train = build_data_loader(cfg, split="train", is_distributed=distributed)
-        self.data_loader_test = build_data_loader(cfg, split="test", is_distributed=distributed)
-
-        cfg.DATASET.IND_TO_OBJECT = self.data_loader_train.dataset.ind_to_classes
-        cfg.DATASET.IND_TO_PREDICATE = self.data_loader_train.dataset.ind_to_predicates
-
-        logger = logging.getLogger("scene_graph_generation.trainer")
         logger.info("Train data size: {}".format(len(self.data_loader_train.dataset)))
-        logger.info("Test data size: {}".format(len(self.data_loader_test.dataset)))
+        if cfg.DATASET.NAME != 'coco':
+            cfg.DATASET.IND_TO_OBJECT = self.data_loader_train.dataset.ind_to_classes
+            cfg.DATASET.IND_TO_PREDICATE = self.data_loader_train.dataset.ind_to_predicates
 
-        if not os.path.exists("freq_prior.npy"):
+        self.data_loader_test = build_data_loader(cfg, split=inference_split, is_distributed=distributed)
+        logger.info("Inference ({}) data size: {}".format(inference_split, len(self.data_loader_test.dataset)))
+
+        if not os.path.exists("freq_prior.npy") and cfg.MODEL.USE_FREQ_PRIOR:
             logger.info("Computing frequency prior matrix...")
             fg_matrix, bg_matrix = self._get_freq_prior()
             prob_matrix = fg_matrix.astype(np.float32)
@@ -202,7 +206,7 @@ class SceneGraphGeneration:
             img = imgs.tensors[i].permute(1, 2, 0).contiguous().cpu().numpy() + np.array(self.cfg.INPUT.PIXEL_MEAN).reshape(1, 1, 3)
             result = img.copy()
             result = overlay_boxes(result, top_prediction)
-            result = overlay_class_names(result, top_prediction, dataset.ind_to_classes)
+            #result = overlay_class_names(result, top_prediction, dataset.ind_to_classes)
             cv2.imwrite(os.path.join(visualize_folder, "detection_{}.jpg".format(img_ids[i])), result)
 
     def test(self, timer=None, visualize=False):
@@ -302,6 +306,97 @@ class SceneGraphGeneration:
                             predictions_pred=predictions_pred,
                             output_folder=output_folder,
                             **extra_args)
+
+    def inference(self, split="train", timer=None, visualize=False):
+        """
+        main body for testing scene graph generation model
+        """
+        logger = logging.getLogger("scene_graph_generation.inference")
+        logger.info("Start inference")
+        self.scene_parser.eval()
+
+        cpu_device = torch.device("cpu")
+        total_timer = Timer()
+        inference_timer = Timer()
+        total_timer.tic()
+
+        if split == "val":
+            data_loader = self.data_loader_test
+            logger.info("Using validation split")
+        elif split == "train":
+            data_loader = self.data_loader_train
+            logger.info("Using training split")
+        else:
+            raise ValueError("Split {} not known!".format(split))
+
+        if self.cfg.MODEL.DUMP_FEATURES:
+            # create output folder and initialize hdf5 writing
+            output_feat_fld = 'features'
+            if not os.path.exists(output_feat_fld):
+                os.makedirs(output_feat_fld)
+            feat_dst_filename = os.path.join(output_feat_fld,
+                                             '{}_{}.db'.format(self.cfg.DATASET.NAME, split))
+            db = shelve.open(feat_dst_filename)
+            #h5f_features = h5f.create_dataset('features', (data_len,), dtype=dtype1)
+
+        for i, data in enumerate(data_loader, 0):
+            imgs, _, image_ids = data
+            imgs = imgs.to(self.device)
+            if i % 10 == 0:
+                logger.info("inference on batch {}/{}...".format(i, len(data_loader)))
+            with torch.no_grad():
+                if timer:
+                    timer.tic()
+                output = self.scene_parser(imgs)
+                if self.cfg.MODEL.RELATION_ON:
+                    output, output_pred, output_features = output
+                    box_feats, pred_feats = output_features
+                    # output_pred = [o.to(cpu_device) for o in output_pred]
+                    # box_feats = [o.to(cpu_device) for o in box_feats]
+
+                if timer:
+                    torch.cuda.synchronize()
+                    timer.toc()
+                output = [o.to(cpu_device) for o in output]
+
+                if self.cfg.MODEL.DUMP_FEATURES:
+                    # TODO: As of now, working only with batch_size = 1
+                    assert len(output) == 1, "batch_size > 1 not supported for feature extraction"
+                    output = output[0]
+                    box_feats = box_feats.cpu()
+
+                    # filter results
+                    output.add_field('features', box_feats)
+                    filtered = select_top_predictions(output)
+
+                    # dump box_feats, output
+                    dump_dict = {'boxes': filtered.bbox.numpy(),
+                                 'scores': filtered.get_field("scores").numpy(),
+                                 'features': filtered.get_field("features").numpy()}
+
+                    db[str(i)] = dump_dict
+                if visualize:
+                    self.visualize_detection(self.data_loader_test.dataset, image_ids, imgs, output)
+
+        synchronize()
+        total_time = total_timer.toc()
+        total_time_str = get_time_str(total_time)
+        num_devices = get_world_size()
+        logger.info(
+            "Total run time: {} ({} s / img per device, on {} devices)".format(
+                total_time_str, total_time * num_devices / len(self.data_loader_test.dataset), num_devices
+            )
+        )
+        total_infer_time = get_time_str(inference_timer.total_time)
+        logger.info(
+            "Model inference time: {} ({} s / img per device, on {} devices)".format(
+                total_infer_time,
+                inference_timer.total_time * num_devices / len(self.data_loader_test.dataset),
+                num_devices,
+            )
+        )
+        db.close()
+
 
 def build_model(cfg, arguments, local_rank, distributed):
     return SceneGraphGeneration(cfg, arguments, local_rank, distributed)

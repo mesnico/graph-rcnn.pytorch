@@ -70,7 +70,7 @@ def train(cfg, args):
     model.train()
     return model
 
-def test(cfg, args, model=None):
+def evaluate(cfg, args, model=None):
     """
     test scene graph generation model
     """
@@ -80,12 +80,23 @@ def test(cfg, args, model=None):
         model = build_model(cfg, arguments, args.local_rank, args.distributed)
     model.test(visualize=args.visualize)
 
+def inference(cfg, args, model=None):
+    """
+    test scene graph generation model
+    """
+    if model is None:
+        arguments = {}
+        arguments["iteration"] = 0
+        model = build_model(cfg, arguments, args.local_rank, args.distributed)
+    model.inference(visualize=args.visualize)
+
 def main():
     ''' parse config file '''
     parser = argparse.ArgumentParser(description="Graph Reasoning Machine for Visual Question Answering")
     parser.add_argument("--config-file", default="configs/baseline_res101.yaml")
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument("--resume", type=int, default=0)
+    parser.add_argument("--evaluate", action='store_true')
     parser.add_argument("--inference", action='store_true')
     parser.add_argument("--instance", type=int, default=-1)
     parser.add_argument("--use_freq_prior", action='store_true')
@@ -93,6 +104,7 @@ def main():
     parser.add_argument("--algorithm", type=str, default='sg_baseline')
     args = parser.parse_args()
 
+    assert not (args.inference and args.evaluate), "Inference and Evaluate are mutually exclusive arguments"
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
     if args.distributed:
@@ -106,8 +118,8 @@ def main():
     cfg.resume = args.resume
     cfg.instance = args.instance
     cfg.inference = args.inference
-    cfg.MODEL.USE_FREQ_PRIOR = args.use_freq_prior
-    cfg.MODEL.ALGORITHM = args.algorithm
+    # cfg.MODEL.USE_FREQ_PRIOR = args.use_freq_prior
+    # cfg.MODEL.ALGORITHM = args.algorithm
     # cfg.freeze()
 
     if not os.path.exists("logs") and get_rank() == 0:
@@ -120,10 +132,13 @@ def main():
     logger.info("Saving config into: {}".format(output_config_path))
     save_config(cfg, output_config_path)
 
-    if not args.inference:
-        model = train(cfg, args)
+    if args.evaluate:
+        evaluate(cfg, args)
+    elif args.inference:
+        inference(cfg, args)
     else:
-        test(cfg, args)
+        model = train(cfg, args)
+
 
 if __name__ == "__main__":
     main()

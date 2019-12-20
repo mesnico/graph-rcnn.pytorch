@@ -22,8 +22,14 @@ def align_and_update_state_dicts(model_state_dict, loaded_state_dict):
     we want to match backbone[0].body.conv1.weight to conv1.weight, and
     backbone[0].body.res2.conv1.weight to res2.conv1.weight.
     """
+    logger = logging.getLogger("scene_graph_generation")
+
     current_keys = sorted(list(model_state_dict.keys()))
     loaded_keys = sorted(list(loaded_state_dict.keys()))
+    if len(current_keys) != len(loaded_keys):
+        logger.warning("Keys in pretrained model does not completely match. "
+                       "Are you sure you are loading the right model weights?")
+
     # get a matrix of string matches, where each (i, j) entry correspond to the size of the
     # loaded_key string, if it matches
     match_matrix = [

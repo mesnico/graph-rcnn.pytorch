@@ -3,6 +3,7 @@ import bisect
 import torch
 from torch.utils import data
 from .vg_hdf5 import vg_hdf5
+from .coco import COCOVal
 from . import samplers
 from .transforms import build_transforms
 from .collate_batch import BatchCollator
@@ -75,6 +76,18 @@ def build_data_loader(cfg, split="train", num_im=-1, is_distributed=False, start
                 batch_sampler=batch_sampler,
                 collate_fn=collator,
             )
+        return dataloader
+
+    elif cfg.DATASET.NAME == 'coco':
+        transforms = build_transforms(cfg, is_train=False)
+        dataset = COCOVal(cfg, split=split, transforms=transforms)
+        collator = BatchCollator(cfg.DATASET.SIZE_DIVISIBILITY)
+        dataloader = data.DataLoader(dataset,
+                                     num_workers=0,
+                                     batch_size=cfg.DATASET.TEST_BATCH_SIZE,
+                                     shuffle=False,
+                                     collate_fn=collator,
+                                     )
         return dataloader
     else:
         raise NotImplementedError("Unsupported dataset {}.".format(cfg.DATASET.NAME))
