@@ -29,7 +29,7 @@ def inference(cfg, args, split="val", model=None):
     model.inference(visualize=False, split=split)
 
 
-def extract_visual_features(dataset='coco', algorithm='sg_imp', split='val'):
+def extract_visual_features(dataset='coco', root='', algorithm='sg_imp', split='val'):
     ''' parse config file '''
     parser = argparse.ArgumentParser(description="Graph Reasoning Machine for Visual Question Answering")
     # parser.add_argument("--config-file", default="configs/baseline_res101.yaml")
@@ -55,6 +55,7 @@ def extract_visual_features(dataset='coco', algorithm='sg_imp', split='val'):
     cfg.MODEL.DUMP_FEATURES = True
     cfg.DATASET.NAME = dataset
     cfg.MODEL.ALGORITHM = algorithm
+    cfg.DATASET.PATH = root
     if algorithm == 'sg_imp':
         cfg.MODEL.WEIGHT_DET = '{}/checkpoints/sg_imp_step_ckpt.pth'.format(os.path.dirname(__file__))
     elif algorithm == 'sg_baseline':
