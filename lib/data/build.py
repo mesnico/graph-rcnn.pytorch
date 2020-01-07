@@ -83,7 +83,7 @@ def build_data_loader(cfg, split="train", num_im=-1, is_distributed=False, start
         dataset = COCOVal(cfg, split=split, transforms=transforms)
         collator = BatchCollator(cfg.DATASET.SIZE_DIVISIBILITY)
         dataloader = data.DataLoader(dataset,
-                                     num_workers=0,
+                                     num_workers=4,
                                      batch_size=cfg.DATASET.TEST_BATCH_SIZE,
                                      shuffle=False,
                                      collate_fn=collator,

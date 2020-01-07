@@ -337,7 +337,7 @@ class SceneGraphGeneration:
             feat_dst_filename = os.path.join(output_feat_fld,
                                              '{}_{}_{}.db'.format(self.cfg.DATASET.NAME, split,
                                                                   self.cfg.MODEL.ALGORITHM))
-            db = shelve.open(feat_dst_filename)
+            db = shelve.open(feat_dst_filename, flag='n')
             #h5f_features = h5f.create_dataset('features', (data_len,), dtype=dtype1)
 
         for i, data in enumerate(data_loader, 0):
@@ -396,7 +396,8 @@ class SceneGraphGeneration:
                 num_devices,
             )
         )
-        db.close()
+        if self.cfg.MODEL.DUMP_FEATURES:
+            db.close()
 
 
 def build_model(cfg, arguments, local_rank, distributed):
