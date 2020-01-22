@@ -6,7 +6,6 @@ Contact: jw2yang@gatech.edu
 
 import os
 import pprint
-import argparse
 import numpy as np
 import torch
 import datetime
@@ -18,33 +17,20 @@ from graphrcnn.lib.scene_parser.rcnn.utils.comm import synchronize, get_rank
 from graphrcnn.lib.scene_parser.rcnn.utils.logger import setup_logger
 
 
-def inference(cfg, args, split="val", model=None):
+def inference(cfg, split="val", model=None, distributed=False):
     """
     test scene graph generation model
     """
     if model is None:
         arguments = {}
         arguments["iteration"] = 0
-        model = build_model(cfg, arguments, 0, args.distributed)
+        model = build_model(cfg, arguments, 0, distributed)
     model.inference(visualize=False, split=split)
 
 
 def extract_visual_features(dataset='coco', root='', algorithm='sg_imp', split='val'):
-    ''' parse config file '''
-    parser = argparse.ArgumentParser(description="Graph Reasoning Machine for Visual Question Answering")
-    # parser.add_argument("--config-file", default="configs/baseline_res101.yaml")
-    # parser.add_argument("--local_rank", type=int, default=0)
-    # parser.add_argument("--resume", type=int, default=0)
-    # parser.add_argument("--evaluate", action='store_true')
-    # parser.add_argument("--inference", action='store_true')
-    # parser.add_argument("--instance", type=int, default=-1)
-    # parser.add_argument("--use_freq_prior", action='store_true')
-    # parser.add_argument("--visualize", action='store_true')
-    # parser.add_argument("--algorithm", type=str, default='sg_baseline')
-    args = parser.parse_args()
 
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
-    args.distributed = num_gpus > 1
 
     config_file = os.path.join(os.path.dirname(__file__), 'configs', 'sgg_res101_joint_coco_inference.yaml')
     cfg.merge_from_file(config_file)
@@ -77,4 +63,4 @@ def extract_visual_features(dataset='coco', root='', algorithm='sg_imp', split='
     # save_config(cfg, output_config_path)
 
     # start inference for dumping features
-    inference(cfg, args, split=split)
+    inference(cfg, split=split)
