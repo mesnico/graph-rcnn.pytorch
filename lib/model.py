@@ -372,6 +372,7 @@ class SceneGraphGeneration:
 
                     # dump box_feats, output
                     dump_dict = {'boxes': filtered.bbox.numpy(),
+                                 'size': filtered.size,
                                  'scores': filtered.get_field("scores").numpy(),
                                  'features': filtered.get_field("features").numpy()}
 
