@@ -9,7 +9,7 @@ class COCOVal(CocoCaptions):
 
         dataset_root_val = os.path.join(cfg.DATASET.PATH, '{}2014'.format(split))
         dataset_json_val = os.path.join(cfg.DATASET.PATH,
-                                        'annotations_trainval2014', 'captions_{}2014.json'.format(split))
+                                        'stanford_split_annots', 'captions_{}2014.json'.format(split))
         super().__init__(dataset_root_val, dataset_json_val)
         self.vg_transforms = transforms
 
